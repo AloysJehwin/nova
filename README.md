@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sensay AI Chatbot Platform
+
+A modern, responsive web application for creating and managing AI chatbots powered by multiple LLM models including GPT-4, Claude, Gemini, and more.
+
+## Features
+
+- **Multiple AI Models**: Choose from GPT-4, Claude, Gemini, DeepSeek, Grok, and other cutting-edge models
+- **Custom Bot Creation**: Create bots with unique personalities and system prompts
+- **Real-time Chat Interface**: Beautiful, responsive chat interface with markdown support
+- **User Management**: Automatic user creation and authentication
+- **Bot Management**: Create, customize, and manage multiple bots per user
+- **Responsive Design**: Works seamlessly on desktop and mobile devices
+- **Dark Theme**: Modern dark theme with purple gradient accents
+
+## Tech Stack
+
+- **Framework**: Next.js 15 with TypeScript
+- **Styling**: Tailwind CSS
+- **Animations**: Framer Motion
+- **State Management**: Zustand
+- **Icons**: Lucide React
+- **Notifications**: React Hot Toast
+- **API Integration**: Sensay API
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18+ 
+- npm or yarn
+- Sensay API credentials (already configured in `.env.local`)
+
+### Installation
+
+1. Navigate to the project directory:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cd sensay-chatbot-app
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Run the development server:
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-## Learn More
+## Usage
 
-To learn more about Next.js, take a look at the following resources:
+### Creating Your First Bot
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Sign Up**: Enter your email on the landing page
+2. **Create Bot**: Click "Create New Bot" in the sidebar
+3. **Customize**: 
+   - Choose a name and description
+   - Select an AI model (GPT-4, Claude, etc.)
+   - Pick a personality preset or create custom
+   - Set greeting message
+4. **Start Chatting**: Select your bot and start conversing!
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Available AI Models
 
-## Deploy on Vercel
+- **GPT-4 Optimized** - OpenAI's most capable model
+- **GPT-4 Mini** - Faster, lighter version
+- **Claude Haiku/Sonnet** - Anthropic's AI models
+- **Gemini Flash/Pro** - Google's AI models
+- **DeepSeek Chat** - Specialized for conversations
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deployment
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Build the production version:
+```bash
+npm run build
+npm start
+```
