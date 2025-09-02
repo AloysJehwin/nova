@@ -15,8 +15,8 @@ interface ReownAuthModalProps {
 
 export default function ReownAuthModal({ isOpen, onClose }: ReownAuthModalProps) {
   const { open } = useAppKit();
-  const { address, caipAddress, isConnected, status } = useAppKitAccount();
-  const { walletProvider } = useAppKitProvider('eip155');
+  const { address, isConnected, status } = useAppKitAccount();
+  useAppKitProvider('eip155');
   const { setUser } = useStore();
   const router = useRouter();
   const [isProcessing, setIsProcessing] = useState(false);
@@ -25,6 +25,7 @@ export default function ReownAuthModal({ isOpen, onClose }: ReownAuthModalProps)
     if (isConnected && address && !isProcessing) {
       handleAuthentication();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isConnected, address]);
 
   const handleAuthentication = async () => {

@@ -69,7 +69,8 @@ export default function ChatInterface() {
       } else {
         toast.error(data.error || 'Failed to get response');
       }
-    } catch (error) {
+    } catch (err) {
+      console.error('Chat error:', err);
       toast.error('Something went wrong');
     } finally {
       setIsLoading(false);
@@ -126,10 +127,11 @@ export default function ChatInterface() {
                   {currentReplica.suggestedQuestions.map((q, i) => (
                     <button
                       key={i}
+                      type="button"
                       onClick={() => setInput(q)}
                       className="block w-full text-left text-sm text-purple-400 hover:text-purple-300 bg-gray-700/50 p-2 rounded transition-colors"
                     >
-                      "{q}"
+                      &ldquo;{q}&rdquo;
                     </button>
                   ))}
                 </div>

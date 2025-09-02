@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
 
+interface SensayUser {
+  id: string;
+  email: string;
+  created_at?: string;
+}
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const ORG_SECRET = process.env.SENSAY_ORG_SECRET;
 const API_VERSION = process.env.NEXT_PUBLIC_API_VERSION;
@@ -13,7 +19,8 @@ async function getUserDatabase(): Promise<Record<string, { id: string; email: st
   try {
     const data = await fs.readFile(USER_DB_PATH, 'utf-8');
     return JSON.parse(data);
-  } catch (error) {
+  } catch (err) {
+    console.error('Error reading user database:', err);
     return {};
   }
 }
@@ -79,7 +86,7 @@ export async function POST(request: NextRequest) {
     console.log('Found', users.length, 'total users in Sensay');
 
     // Find user by email
-    const existingSensayUser = users.find((u: any) => u.email === email);
+    const existingSensayUser = users.find((u: SensayUser) => u.email === email);
 
     if (existingSensayUser) {
       console.log('Found user in Sensay:', existingSensayUser.id, existingSensayUser.email);

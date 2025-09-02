@@ -192,6 +192,7 @@ async function testAPIErrors() {
     });
     
     const data2 = await response2.json();
+    console.log('Error response data:', data2);
     if (!response2.ok) {
       console.log('✅ Invalid bot UUID error handled');
     } else {

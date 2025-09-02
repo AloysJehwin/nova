@@ -4,6 +4,28 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const ORG_SECRET = process.env.SENSAY_ORG_SECRET;
 const API_VERSION = process.env.NEXT_PUBLIC_API_VERSION;
 
+interface SensayHistoryItem {
+  id: string;
+  content: string;
+  role: string;
+  created_at: string;
+  source?: string;
+  is_private?: boolean;
+  original_message_id?: string;
+  sources?: string[];
+}
+
+interface TransformedMessage {
+  id: string;
+  content: string;
+  role: string;
+  timestamp: Date;
+  source?: string;
+  isPrivate?: boolean;
+  originalMessageId?: string;
+  sources?: string[];
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -42,7 +64,7 @@ export async function GET(request: NextRequest) {
       console.log('📦 Raw Sensay API response:', JSON.stringify(data, null, 2));
       
       // Transform the API response to match our chat interface format
-      const messages = data.items?.map((item: any) => ({
+      const messages: TransformedMessage[] = data.items?.map((item: SensayHistoryItem) => ({
         id: item.id,
         content: item.content,
         role: item.role,
@@ -57,7 +79,7 @@ export async function GET(request: NextRequest) {
 
       return NextResponse.json({
         success: true,
-        messages: messages.sort((a: any, b: any) => 
+        messages: messages.sort((a: TransformedMessage, b: TransformedMessage) => 
           new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
         ),
         total: messages.length

@@ -6,6 +6,7 @@ import { X, Mail, ArrowRight, CheckCircle } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import GoogleAuthButton from './GoogleAuthButton';
 
 interface EmailAuthModalProps {
   isOpen: boolean;
@@ -125,6 +126,21 @@ export default function EmailAuthModal({ isOpen, onClose }: EmailAuthModalProps)
             >
               <X className="w-5 h-5" />
             </button>
+          </div>
+
+          {/* Google OAuth Option */}
+          <div className="mb-6">
+            <GoogleAuthButton className="w-full" />
+          </div>
+
+          {/* Divider */}
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-700"></div>
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-gray-900 px-2 text-gray-400">Or continue with email</span>
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">

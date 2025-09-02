@@ -1,22 +1,23 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { Bot, Plus, User, LogOut, Settings, Trash2, Menu, X } from 'lucide-react';
+import { Bot, Plus, User, LogOut, Settings, Menu, X } from 'lucide-react';
 import { useStore } from '@/store/useStore';
 import { Replica } from '@/types';
 import CreateBotModal from './CreateBotModal';
-import { useRouter } from 'next/navigation';
+import UserSettingsModal from './UserSettingsModal';
+import { signOut } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
 export default function Sidebar() {
-  const { user, replicas, setReplicas, currentReplica, setCurrentReplica, clearMessages, setUser, loadChatHistory } = useStore();
-  const router = useRouter();
+  const { user, replicas, setReplicas, currentReplica, setCurrentReplica, setUser, loadChatHistory } = useStore();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isUserSettingsOpen, setIsUserSettingsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const fetchReplicas = async () => {
+  const fetchReplicas = useCallback(async () => {
     if (!user) return;
     
     setIsLoading(true);
@@ -27,16 +28,17 @@ export default function Sidebar() {
       if (data.items) {
         setReplicas(data.items);
       }
-    } catch (error) {
+    } catch (err) {
+      console.error('Failed to fetch bots:', err);
       toast.error('Failed to fetch bots');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [user, setReplicas]);
 
   useEffect(() => {
     fetchReplicas();
-  }, [user]);
+  }, [fetchReplicas]);
 
   const selectBot = async (replica: Replica) => {
     setCurrentReplica(replica);
@@ -71,6 +73,7 @@ export default function Sidebar() {
       {/* Create Bot Button */}
       <div className="p-4">
         <button
+          type="button"
           onClick={() => setIsCreateModalOpen(true)}
           className="w-full px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all flex items-center justify-center gap-2 font-medium"
         >
@@ -142,16 +145,34 @@ export default function Sidebar() {
 
       {/* Bottom Actions */}
       <div className="p-4 border-t border-gray-700 space-y-2">
-        <button className="w-full px-3 py-2 text-left text-sm text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors flex items-center gap-2">
+        <button 
+          type="button" 
+          onClick={() => setIsUserSettingsOpen(true)}
+          title="Open user settings"
+          className="w-full px-3 py-2 text-left text-sm text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors flex items-center gap-2"
+        >
           <Settings className="w-4 h-4" />
           Settings
         </button>
         <button 
-          onClick={() => {
-            setUser(null);
-            localStorage.removeItem('sensayUser');
-            router.push('/');
-            toast.success('Signed out successfully');
+          type="button"
+          onClick={async () => {
+            try {
+              // Clear local storage
+              localStorage.removeItem('sensayUser');
+              localStorage.removeItem('userEmail');
+              
+              // Clear user from store
+              setUser(null);
+              
+              // Sign out from NextAuth
+              await signOut({ callbackUrl: '/' });
+              
+              toast.success('Signed out successfully');
+            } catch (error) {
+              console.error('Sign out error:', error);
+              toast.error('Failed to sign out');
+            }
           }}
           className="w-full px-3 py-2 text-left text-sm text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors flex items-center gap-2"
         >
@@ -166,6 +187,7 @@ export default function Sidebar() {
     <>
       {/* Mobile Menu Button */}
       <button
+        type="button"
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-gray-800 rounded-lg text-white"
       >
@@ -200,6 +222,11 @@ export default function Sidebar() {
         onClose={() => setIsCreateModalOpen(false)}
         userId={user?.id || ''}
         onBotCreated={fetchReplicas}
+      />
+
+      <UserSettingsModal
+        isOpen={isUserSettingsOpen}
+        onClose={() => setIsUserSettingsOpen(false)}
       />
     </>
   );

@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
           
           return NextResponse.json(data, { status: response.status });
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         lastError = error;
         if (attempt < 2) {
           console.log(`Attempt ${attempt + 1} failed, retrying...`);
@@ -98,10 +98,13 @@ export async function POST(request: NextRequest) {
     }
     
     throw lastError;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Replica creation error:', error);
+    const errorMessage = error instanceof Error && error.name === 'AbortError' 
+      ? 'Request timeout - Sensay API is slow' 
+      : 'Failed to create replica';
     return NextResponse.json(
-      { error: error.name === 'AbortError' ? 'Request timeout - Sensay API is slow' : 'Failed to create replica' },
+      { error: errorMessage },
       { status: 500 }
     );
   }
@@ -133,7 +136,8 @@ export async function GET(request: NextRequest) {
     } else {
       return NextResponse.json(data, { status: response.status });
     }
-  } catch (error) {
+  } catch (err) {
+    console.error('Replicas fetch error:', err);
     return NextResponse.json(
       { error: 'Failed to fetch replicas' },
       { status: 500 }

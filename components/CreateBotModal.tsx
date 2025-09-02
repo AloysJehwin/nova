@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Bot, Sparkles, Brain, Zap } from 'lucide-react';
+import { X, Bot, Sparkles, Brain, Zap, LucideIcon } from 'lucide-react';
 import { LLMModel } from '@/types';
 import toast from 'react-hot-toast';
 
@@ -13,7 +13,7 @@ interface CreateBotModalProps {
   onBotCreated: () => void;
 }
 
-const models: { value: LLMModel; label: string; icon: any }[] = [
+const models: { value: LLMModel; label: string; icon: LucideIcon }[] = [
   { value: 'gpt-4o', label: 'GPT-4 Optimized', icon: Zap },
   { value: 'gpt-5', label: 'GPT-5', icon: Sparkles },
   { value: 'claude-3-5-haiku-latest', label: 'Claude Haiku', icon: Brain },
@@ -157,6 +157,7 @@ export default function CreateBotModal({ isOpen, onClose, userId, onBotCreated }
                 Create Your AI Assistant
               </h2>
               <button
+          
                 onClick={onClose}
                 className="text-gray-400 hover:text-white transition-colors"
               >
@@ -211,11 +212,11 @@ export default function CreateBotModal({ isOpen, onClose, userId, onBotCreated }
                   Bot Type
                 </label>
                 <div className="grid grid-cols-3 gap-2">
-                  {['character', 'individual', 'brand'].map((type) => (
+                  {(['character', 'individual', 'brand'] as const).map((type) => (
                     <button
                       key={type}
                       type="button"
-                      onClick={() => setFormData({ ...formData, type: type as any })}
+                      onClick={() => setFormData({ ...formData, type })}
                       className={`px-4 py-2 rounded-lg border transition-all ${
                         formData.type === type
                           ? 'bg-purple-600 border-purple-500 text-white'

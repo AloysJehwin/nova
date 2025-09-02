@@ -47,7 +47,8 @@ export async function POST(request: NextRequest) {
     } else {
       return NextResponse.json(data, { status: response.status });
     }
-  } catch (error) {
+  } catch (err) {
+    console.error('Chat error:', err);
     return NextResponse.json(
       { error: 'Failed to send message' },
       { status: 500 }

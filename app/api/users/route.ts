@@ -10,6 +10,7 @@ export async function POST(request: NextRequest) {
     
     // Log the user creation attempt
     console.log('Creating/updating user in Sensay:', body.id, body.email);
+    console.log('📦 Sending to Sensay API:', JSON.stringify(body, null, 2));
     
     const response = await fetch(`${API_URL}/v1/users`, {
       method: 'POST',
@@ -73,7 +74,8 @@ export async function GET(request: NextRequest) {
     } else {
       return NextResponse.json(data, { status: response.status });
     }
-  } catch (error) {
+  } catch (err) {
+    console.error('User fetch error:', err);
     return NextResponse.json(
       { error: 'Failed to fetch user' },
       { status: 500 }

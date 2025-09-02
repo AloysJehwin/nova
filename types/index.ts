@@ -1,6 +1,8 @@
 export interface User {
   id: string;
   email: string;
+  name?: string;
+  image?: string;
   linkedAccounts?: unknown[];
   emailVerified?: boolean;
   createdAt?: Date;

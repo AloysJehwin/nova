@@ -1,4 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createHash } from 'crypto';
+
+interface SensayUser {
+  id: string;
+  email: string;
+  created_at?: string;
+}
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const ORG_SECRET = process.env.SENSAY_ORG_SECRET;
@@ -79,8 +86,7 @@ export async function POST(request: NextRequest) {
     // Generate a consistent ID based on email (same email = same ID always)
     const emailHash = email.toLowerCase().replace(/[^a-z0-9]/g, '').substring(0, 20);
     // Use a hash of the email for consistent ID generation - NO timestamp
-    const crypto = require('crypto');
-    const emailHex = crypto.createHash('md5').update(email.toLowerCase()).digest('hex').substring(0, 12);
+    const emailHex = createHash('md5').update(email.toLowerCase()).digest('hex').substring(0, 12);
     const tempUserId = `${emailHash}_${emailHex}`;
     
     console.log('🔑 Generated consistent user ID for', email, ':', tempUserId);
@@ -166,7 +172,7 @@ export async function POST(request: NextRequest) {
               }
               
               const existingSensayUser = Array.isArray(users) ? 
-                users.find((u: any) => u.email === email) : null;
+                users.find((u: SensayUser) => u.email === email) : null;
               
               if (existingSensayUser) {
                 console.log('Found existing user in Sensay:', existingSensayUser.id);
@@ -249,7 +255,8 @@ export async function POST(request: NextRequest) {
       user: finalUser
     });
     
-  } catch (error) {
+  } catch (err) {
+    console.error('Error in user check/create:', err);
     return NextResponse.json(
       { error: 'Failed to check/create user' },
       { status: 500 }

@@ -19,8 +19,9 @@ export default function ChatPage() {
         try {
           const userData = JSON.parse(savedUser);
           setUser(userData);
-        } catch (error) {
+        } catch (err) {
           // Invalid data, redirect to home
+          console.error('Error parsing user data:', err);
           localStorage.removeItem('sensayUser');
           router.push('/');
         }
